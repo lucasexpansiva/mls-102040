@@ -134,7 +134,7 @@ export class GroupViewTableIndex extends StateLitElement {
   <div>
     <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">page-size</p>
     <div class="flex flex-col gap-1.5">
-      ${[5, 10, 25].map((size) => html`
+      ${([5, 10, 25] as const).map((size) => html`
         <button
           class="${cfg.pageSize === size
             ? 'bg-sky-500 text-white border-sky-500'
@@ -143,6 +143,13 @@ export class GroupViewTableIndex extends StateLitElement {
           @click=${() => update({ ...cfg, pageSize: size })}
         >${size} per page</button>
       `)}
+      <button
+        class="${cfg.pageSize === 0
+          ? 'bg-sky-500 text-white border-sky-500'
+          : `${cardBg} text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:opacity-80`
+        } border rounded-lg px-3 py-1.5 text-sm font-medium transition-colors cursor-pointer w-full text-left"
+        @click=${() => update({ ...cfg, pageSize: 0 })}
+      >View all</button>
     </div>
   </div>
 </div>`;
@@ -179,7 +186,9 @@ export class GroupViewTableIndex extends StateLitElement {
   render() {
     const dtPageSize  = this.dataTableMinimal.pageSize;
     const dtPage      = this.dataTablePage;
-    const dtPageRows  = EMPLOYEES.slice((dtPage - 1) * dtPageSize, dtPage * dtPageSize);
+    const dtPageRows  = dtPageSize > 0
+      ? EMPLOYEES.slice((dtPage - 1) * dtPageSize, dtPage * dtPageSize)
+      : EMPLOYEES;
 
     return html`
 <div class="bg-white dark:bg-slate-900 min-h-screen font-sans">
@@ -222,10 +231,10 @@ export class GroupViewTableIndex extends StateLitElement {
           <Caption>Employee Directory (${EMPLOYEES.length} employees)</Caption>
           <TableHeader>
             <TableRow>
-              <TableHead key="name">Name</TableHead>
-              <TableHead key="department">Department</TableHead>
-              <TableHead key="role">Role</TableHead>
-              <TableHead key="status">Status</TableHead>
+              <TableHead key="name" sortable>Name</TableHead>
+              <TableHead key="department" sortable>Department</TableHead>
+              <TableHead key="role" sortable>Role</TableHead>
+              <TableHead key="status" sortable>Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
