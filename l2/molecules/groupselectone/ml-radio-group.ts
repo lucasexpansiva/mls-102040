@@ -84,12 +84,13 @@ export class MlRadioGroupMolecule extends MoleculeAuraElement {
   // PARSING HELPERS
   // ===========================================================================
   private parseItems(): ParsedItem[] {
-    const itemElements = this.getSlots('Item');
-    return itemElements.map((el) => ({
-      value: el.getAttribute('value') || '',
-      label: el.innerHTML.trim(),
-      disabled: el.hasAttribute('disabled'),
-    }));
+    return this.getSlots('Item')
+      .filter((el) => el.closest('Group') === null)
+      .map((el) => ({
+        value: el.getAttribute('value') || '',
+        label: el.innerHTML.trim(),
+        disabled: el.hasAttribute('disabled'),
+      }));
   }
   private parseGroups(): ParsedGroup[] {
     const groupElements = this.getSlots('Group');
