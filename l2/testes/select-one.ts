@@ -6,7 +6,7 @@ import { StateLitElement } from '/_102029_/l2/stateLitElement.js';
 import '/_102040_/l2/molecules/groupselectone/ml-radio-group';
 import '/_102040_/l2/molecules/groupselectone/ml-segmented-control';
 
-@customElement('select-one-102040')
+@customElement('testes--select-one')
 export class SelectOne102040 extends StateLitElement {
 
   @state() radioValue: string = 'standard';
