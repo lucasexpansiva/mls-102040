@@ -28,7 +28,7 @@ export class GroupSelectOneIndexE extends StateLitElement {
   @state() cardToggle  = 'enabled';
   @state() cardCycle   = 'monthly';
   @state() cardPlan    = 'pro';
-  @state() cardSat     = 'good';
+  @state() cardSat     = '50';
   @state() cardCountry = 'BR';
 
   // ── Scenario section states ──────────────────────────────────
@@ -67,7 +67,7 @@ export class GroupSelectOneIndexE extends StateLitElement {
   private renderShowcaseCards(): TemplateResult {
     return html`
 <section class="bg-slate-50 dark:bg-slate-950 px-8 py-12 border-b border-slate-200 dark:border-slate-700">
-  <div class="max-w-6xl mx-auto grid grid-cols-3 gap-5 items-start">
+  <div class="max-w-6xl mx-auto flex flex-col gap-5">
 
     <!-- Toggle Switch -->
     <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
@@ -128,8 +128,8 @@ export class GroupSelectOneIndexE extends StateLitElement {
       </div>
     </div>
 
-    <!-- Discrete Slider (spans 2 cols for horizontal breathing room) -->
-    <div class="col-span-2 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+    <!-- Discrete Slider -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
       <div class="h-1 bg-amber-500"></div>
       <div class="p-6">
         <div class="flex items-center justify-between mb-1">
@@ -141,11 +141,9 @@ export class GroupSelectOneIndexE extends StateLitElement {
           value="${this.cardSat}" name="card-sat" .isEditing=${true} .fillPrevious=${true}
           @change=${(e: CustomEvent) => { this.cardSat = e.detail.value; }}>
           <Label>Satisfaction</Label>
-          <Item value="very-poor">Very Poor</Item>
-          <Item value="poor">Poor</Item>
-          <Item value="average">Average</Item>
-          <Item value="good">Good</Item>
-          <Item value="excellent">Excellent</Item>
+          <Item value="0">0%</Item>
+          <Item value="50">50%</Item>
+          <Item value="100">100%</Item>
         </groupselectone--ml-discrete-slider>
       </div>
     </div>
