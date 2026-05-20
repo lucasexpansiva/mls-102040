@@ -235,7 +235,7 @@ export class MlHorizontalStepperMolecule extends MoleculeAuraElement {
       : step.title;
 
     return html`
-      <div class="flex flex-col items-center flex-1 min-w-0">
+      <div class="flex flex-col items-center flex-none">
         <button
           class="${indicatorClasses}"
           type="button"
@@ -257,6 +257,17 @@ export class MlHorizontalStepperMolecule extends MoleculeAuraElement {
     `;
   }
 
+  private renderConnector(afterIndex: number): TemplateResult {
+    const isCompleted = afterIndex < this.value;
+    return html`
+      <div class="flex-1 flex items-start pt-[18px] px-2">
+        <div class="h-0.5 w-full transition-colors ${isCompleted
+          ? 'bg-emerald-400 dark:bg-emerald-500'
+          : 'bg-slate-200 dark:bg-slate-600'}"></div>
+      </div>
+    `;
+  }
+
   render() {
     const lang = this.getMessageKey(messages);
     this.msg = messages[lang];
@@ -270,13 +281,16 @@ export class MlHorizontalStepperMolecule extends MoleculeAuraElement {
           ? html`<div class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-300">${unsafeHTML(this.getSlotContent('Label'))}</div>`
           : html``}
         <div
-          class="flex items-start gap-4"
+          class="flex items-start"
           role="tablist"
           aria-label="${ariaLabel}"
           aria-busy="${this.loading ? 'true' : 'false'}"
           @keydown=${(e: KeyboardEvent) => this.handleKeyDown(e, steps)}
         >
-          ${steps.map((step, index) => this.renderStep(step, index, steps))}
+          ${steps.map((step, index) => html`
+            ${this.renderStep(step, index, steps)}
+            ${index < steps.length - 1 ? this.renderConnector(index) : html``}
+          `)}
         </div>
         ${this.loading ? html`<div class="mt-3">${this.renderLoading()}</div>` : html``}
       </div>
