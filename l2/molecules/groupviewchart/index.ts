@@ -1,109 +1,53 @@
 /// <mls fileReference="_102040_/l2/molecules/groupviewchart/index.ts" enhancement="_102020_/l2/enhancementAura"/>
 
 import { html, TemplateResult } from 'lit';
-import { customElement, state } from 'lit/decorators.js';
+import { customElement } from 'lit/decorators.js';
 import { StateLitElement } from '/_102029_/l2/stateLitElement.js';
 import '/_102040_/l2/molecules/groupviewchart/ml-area-chart';
 import '/_102040_/l2/molecules/groupviewchart/ml-line-chart';
 
-interface ChartConfig {
-  showLegend: boolean;
-  showValues: boolean;
-  loading: boolean;
-}
-
-const defaultChartConfig = (): ChartConfig => ({
-  showLegend: true,
-  showValues: false,
-  loading: false,
-});
-
 @customElement('molecules--groupviewchart--index-102040')
 export class GroupViewChartIndex extends StateLitElement {
 
-  @state() areaChart: ChartConfig = defaultChartConfig();
-  @state() lineChart: ChartConfig = defaultChartConfig();
-
   // ===========================================================================
-  // CONFIG PANEL HELPERS
+  // HERO
   // ===========================================================================
 
-  private renderToggle(label: string, active: boolean, onClick: () => void): TemplateResult {
+  private renderHero(): TemplateResult {
     return html`
-<button
-  class="${active
-    ? 'bg-sky-500 text-white border-sky-500'
-    : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:opacity-80'
-  } border rounded-lg px-3 py-1.5 text-sm font-medium transition-colors cursor-pointer w-full text-left"
-  @click=${onClick}
->${label}</button>`;
-  }
-
-  private renderChartConfig(cfg: ChartConfig, update: (next: ChartConfig) => void): TemplateResult {
-    return html`
-<div class="flex flex-col gap-4">
-  <div>
-    <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">Props</p>
-    <div class="flex flex-col gap-2">
-      ${this.renderToggle('show-legend', cfg.showLegend, () => update({ ...cfg, showLegend: !cfg.showLegend }))}
-      ${this.renderToggle('show-values', cfg.showValues, () => update({ ...cfg, showValues: !cfg.showValues }))}
-      ${this.renderToggle('loading',     cfg.loading,    () => update({ ...cfg, loading:    !cfg.loading    }))}
-    </div>
-  </div>
-</div>`;
+<header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-8 py-20 text-center">
+  <span class="inline-block px-3 py-1 bg-sky-100 dark:bg-sky-900 text-sky-600 dark:text-sky-300 rounded-full text-xs font-semibold uppercase tracking-widest mb-6">
+    groupViewChart
+  </span>
+  <h1 class="text-5xl font-bold text-slate-900 dark:text-slate-50 mb-5 tracking-tight">
+    View Chart
+  </h1>
+  <p class="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+    Two chart types sharing the same data contract — swap the tag to change the visualization.
+    Both support multi-series, legends, value labels, loading states, and dark mode.
+  </p>
+</header>`;
   }
 
   // ===========================================================================
-  // RENDER
+  // SHOWCASE CARDS
   // ===========================================================================
 
-  render() {
+  private renderShowcaseCards(): TemplateResult {
     return html`
-<div class="bg-white dark:bg-slate-900 min-h-screen font-sans">
+<section class="bg-slate-50 dark:bg-slate-950 px-8 py-12 border-b border-slate-200 dark:border-slate-700">
+  <div class="max-w-2xl mx-auto flex flex-col gap-5">
 
-  <!-- Group header -->
-  <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-8 py-10">
-    <div class="max-w-3xl">
-      <span class="inline-block px-2.5 py-1 bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 rounded-md text-xs font-semibold uppercase tracking-wide mb-3">
-        groupViewChart
-      </span>
-      <h1 class="text-3xl font-bold text-slate-900 dark:text-slate-50 mb-3">View Chart</h1>
-      <p class="text-base text-slate-600 dark:text-slate-400 leading-relaxed">
-        Displays data through graphical representation. Data provided via Series and Point slot tags.
-        All chart implementations share the same data contract — swap the component tag to change visualization.
-        Supports multi-series (Line, Bar, Area, Radar, Scatter) and single-series (Pie, Donut, Funnel).
-      </p>
-    </div>
-  </header>
-
-  <!-- ml-area-chart -->
-  <section class="bg-white dark:bg-slate-900 px-8 py-12 border-t border-slate-200 dark:border-slate-700">
-    <div class="mb-8">
-      <div class="flex items-center gap-3 mb-2">
-        <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Area Chart</h2>
-        <code class="text-xs bg-slate-200/70 dark:bg-slate-700 text-slate-500 dark:text-slate-400 px-2 py-1 rounded">groupviewchart--ml-area-chart</code>
-      </div>
-      <p class="text-sm text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
-        Present quantitative information as an area chart that highlights volume through filled regions
-        below trend lines. Enables comparison across single or multiple data series, with a default
-        stacked view that shows how individual parts compose a total.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-[200px_1fr] gap-6 items-start">
-
-      <!-- Config -->
-      <div class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-        ${this.renderChartConfig(this.areaChart, (next) => { this.areaChart = next; })}
-      </div>
-
-      <!-- Component -->
-      <div class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
-        <groupviewchart--ml-area-chart
-          .showLegend=${this.areaChart.showLegend}
-          .showValues=${this.areaChart.showValues}
-          .loading=${this.areaChart.loading}
-        >
+    <!-- Area Chart -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <div class="h-1 bg-sky-500"></div>
+      <div class="p-6">
+        <div class="flex items-center justify-between mb-1">
+          <p class="text-sm font-bold text-slate-900 dark:text-slate-50">Area Chart</p>
+          <code class="text-xs bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded">ml-area-chart</code>
+        </div>
+        <p class="text-xs text-slate-400 mb-5">Volume, cumulative totals, and part-to-whole</p>
+        <groupviewchart--ml-area-chart .showLegend=${true} .showValues=${false} .loading=${false}>
           <Label>Monthly Revenue by Product Line</Label>
           <Series name="SaaS" color="#0ea5e9">
             <Point label="Jan" value="42000" />
@@ -131,38 +75,18 @@ export class GroupViewChartIndex extends StateLitElement {
           </Series>
         </groupviewchart--ml-area-chart>
       </div>
-
-    </div>
-  </section>
-
-  <!-- ml-line-chart -->
-  <section class="bg-slate-100/70 dark:bg-slate-800/50 px-8 py-12 border-t border-slate-200 dark:border-slate-700">
-    <div class="mb-8">
-      <div class="flex items-center gap-3 mb-2">
-        <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Line Chart</h2>
-        <code class="text-xs bg-slate-200/70 dark:bg-slate-700 text-slate-500 dark:text-slate-400 px-2 py-1 rounded">groupviewchart--ml-line-chart</code>
-      </div>
-      <p class="text-sm text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
-        Display the evolution of numeric data over time using a multi-series line chart. Visualizes
-        connections between ordered data points, allows comparison across series, and handles
-        loading, empty, and dark-mode states.
-      </p>
     </div>
 
-    <div class="grid grid-cols-[200px_1fr] gap-6 items-start">
-
-      <!-- Config -->
-      <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-        ${this.renderChartConfig(this.lineChart, (next) => { this.lineChart = next; })}
-      </div>
-
-      <!-- Component -->
-      <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
-        <groupviewchart--ml-line-chart
-          .showLegend=${this.lineChart.showLegend}
-          .showValues=${this.lineChart.showValues}
-          .loading=${this.lineChart.loading}
-        >
+    <!-- Line Chart -->
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <div class="h-1 bg-emerald-500"></div>
+      <div class="p-6">
+        <div class="flex items-center justify-between mb-1">
+          <p class="text-sm font-bold text-slate-900 dark:text-slate-50">Line Chart</p>
+          <code class="text-xs bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded">ml-line-chart</code>
+        </div>
+        <p class="text-xs text-slate-400 mb-5">Trends, progressions, and individual value precision</p>
+        <groupviewchart--ml-line-chart .showLegend=${true} .showValues=${false} .loading=${false}>
           <Label>Weekly Website Traffic by Channel</Label>
           <Series name="Organic" color="#10b981">
             <Point label="Week 1" value="12400" />
@@ -190,10 +114,80 @@ export class GroupViewChartIndex extends StateLitElement {
           </Series>
         </groupviewchart--ml-line-chart>
       </div>
-
     </div>
-  </section>
 
+  </div>
+</section>`;
+  }
+
+  // ===========================================================================
+  // REFERENCE TABLE
+  // ===========================================================================
+
+  private renderReferenceTable(): TemplateResult {
+    const rows: Array<{
+      scenario: string;
+      area: boolean; line: boolean;
+    }> = [
+      { scenario: 'Highlight volume below trend lines',            area: true,  line: false },
+      { scenario: 'Track and compare trends over time',            area: true,  line: true  },
+      { scenario: 'Show part-to-whole composition across series',  area: true,  line: false },
+      { scenario: 'Emphasize connections between data points',     area: false, line: true  },
+      { scenario: 'Multi-series comparison',                       area: true,  line: true  },
+      { scenario: 'Visualize cumulative growth',                   area: true,  line: false },
+      { scenario: 'Make individual data values easy to read',      area: false, line: true  },
+    ];
+    const headers = [
+      { label: 'Area Chart', cls: 'text-sky-600 dark:text-sky-400'         },
+      { label: 'Line Chart', cls: 'text-emerald-600 dark:text-emerald-400' },
+    ];
+    return html`
+<section class="bg-slate-100 dark:bg-slate-950 px-8 py-20 border-t border-slate-200 dark:border-slate-700">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-50 mb-2">Quick reference</h2>
+    <p class="text-sm text-slate-500 dark:text-slate-400 mb-8">Match your visualization need to the right chart type.</p>
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+            <th class="text-left px-5 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide w-1/2">
+              Scenario
+            </th>
+            ${headers.map(h => html`
+              <th class="px-4 py-3.5 text-xs font-semibold uppercase tracking-wide ${h.cls}">${h.label}</th>
+            `)}
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map((row, i) => html`
+            <tr class="${i % 2 !== 0 ? 'bg-slate-50/60 dark:bg-slate-900/40' : ''} border-b border-slate-100 dark:border-slate-700/60 last:border-0">
+              <td class="px-5 py-3.5 text-slate-700 dark:text-slate-300">${row.scenario}</td>
+              ${([row.area, row.line] as boolean[]).map(ok => html`
+                <td class="px-4 py-3.5 text-center">
+                  ${ok
+                    ? html`<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 text-xs font-bold">✓</span>`
+                    : html`<span class="text-slate-200 dark:text-slate-700 text-sm">—</span>`}
+                </td>
+              `)}
+            </tr>
+          `)}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>`;
+  }
+
+  // ===========================================================================
+  // RENDER
+  // ===========================================================================
+
+  render() {
+    return html`
+<div class="font-sans min-h-screen">
+  ${this.renderHero()}
+  ${this.renderShowcaseCards()}
+  ${this.renderReferenceTable()}
 </div>`;
   }
 }

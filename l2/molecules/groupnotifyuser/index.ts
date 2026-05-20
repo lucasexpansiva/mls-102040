@@ -6,69 +6,63 @@ import { StateLitElement } from '/_102029_/l2/stateLitElement.js';
 import '/_102040_/l2/molecules/groupnotifyuser/ml-toast-notification';
 
 type ToastType = 'info' | 'success' | 'warning' | 'error';
-type Position = 'top-left' | 'top' | 'top-right' | 'bottom-left' | 'bottom' | 'bottom-right';
 
-interface ToastConfig {
-  dismissible: boolean;
-  duration: number;
-  position: Position;
-}
-
-const POSITIONS: Position[] = ['top-left', 'top', 'top-right', 'bottom-left', 'bottom', 'bottom-right'];
-
-const TOAST_TYPES: Array<{
+const TOAST_VARIANTS: Array<{
   type: ToastType;
   label: string;
-  bg: string;
-  text: string;
+  bar: string;
+  labelCls: string;
+  subtitle: string;
   title: string;
   message: string;
 }> = [
   {
     type: 'info',
     label: 'Info',
-    bg: 'bg-sky-50 hover:bg-sky-100 border-sky-200 dark:bg-sky-900/30 dark:border-sky-800',
-    text: 'text-sky-700 dark:text-sky-300',
+    bar: 'bg-sky-500',
+    labelCls: 'text-sky-600 dark:text-sky-400',
+    subtitle: 'System updates and neutral information',
     title: 'New update available',
-    message: 'Version 2.4.0 is ready to install. Refresh the page to apply the update.',
+    message: 'Version 2.4.0 is ready to install. Refresh the page to apply.',
   },
   {
     type: 'success',
     label: 'Success',
-    bg: 'bg-emerald-50 hover:bg-emerald-100 border-emerald-200 dark:bg-emerald-900/30 dark:border-emerald-800',
-    text: 'text-emerald-700 dark:text-emerald-300',
+    bar: 'bg-emerald-500',
+    labelCls: 'text-emerald-600 dark:text-emerald-400',
+    subtitle: 'Confirms a completed action',
     title: 'Changes saved',
     message: 'Your profile has been updated successfully.',
   },
   {
     type: 'warning',
     label: 'Warning',
-    bg: 'bg-amber-50 hover:bg-amber-100 border-amber-200 dark:bg-amber-900/30 dark:border-amber-800',
-    text: 'text-amber-700 dark:text-amber-300',
+    bar: 'bg-amber-500',
+    labelCls: 'text-amber-600 dark:text-amber-400',
+    subtitle: 'Recoverable issue requiring attention',
     title: 'Storage almost full',
-    message: 'You are using 92% of your storage quota. Consider removing unused files.',
+    message: 'You are using 92% of your storage quota.',
   },
   {
     type: 'error',
     label: 'Error',
-    bg: 'bg-red-50 hover:bg-red-100 border-red-200 dark:bg-red-900/30 dark:border-red-800',
-    text: 'text-red-700 dark:text-red-300',
+    bar: 'bg-red-500',
+    labelCls: 'text-red-600 dark:text-red-400',
+    subtitle: 'Critical failure requiring action',
     title: 'Payment failed',
-    message: 'We could not process your payment. Please check your card details and try again.',
+    message: 'We could not process your payment. Check your card details.',
   },
 ];
 
 @customElement('molecules--groupnotifyuser--index-102040')
 export class GroupNotifyUserIndex extends StateLitElement {
 
-  @state() config: ToastConfig = { dismissible: true, duration: 3000, position: 'bottom-right' };
   @state() visibleInfo    = false;
   @state() visibleSuccess = false;
   @state() visibleWarning = false;
   @state() visibleError   = false;
 
   private show(type: ToastType) {
-    // reset all, then show the selected one
     this.visibleInfo    = false;
     this.visibleSuccess = false;
     this.visibleWarning = false;
@@ -96,57 +90,127 @@ export class GroupNotifyUserIndex extends StateLitElement {
   }
 
   // ===========================================================================
-  // CONFIG PANEL
+  // HERO
   // ===========================================================================
 
-  private renderConfig(): TemplateResult {
-    const { dismissible, duration, position } = this.config;
-
+  private renderHero(): TemplateResult {
     return html`
-<div class="flex flex-col gap-5">
+<header class="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 px-8 py-20 text-center">
+  <span class="inline-block px-3 py-1 bg-sky-100 dark:bg-sky-900 text-sky-600 dark:text-sky-300 rounded-full text-xs font-semibold uppercase tracking-widest mb-6">
+    groupNotifyUser
+  </span>
+  <h1 class="text-5xl font-bold text-slate-900 dark:text-slate-50 mb-5 tracking-tight">
+    Notify User
+  </h1>
+  <p class="text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">
+    Ephemeral notifications that slide into a screen corner, communicate outcomes clearly,
+    and disappear — without interrupting the user's workflow.
+  </p>
+</header>`;
+  }
 
-  <div>
-    <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">position</p>
-    <div class="grid grid-cols-3 gap-1.5">
-      ${POSITIONS.map((p) => html`
+  // ===========================================================================
+  // SHOWCASE CARDS
+  // ===========================================================================
+
+  private renderShowcaseCards(): TemplateResult {
+    return html`
+<section class="bg-slate-50 dark:bg-slate-950 px-8 py-12 border-b border-slate-200 dark:border-slate-700">
+  <div class="max-w-2xl mx-auto flex flex-col gap-5">
+
+    ${TOAST_VARIANTS.map(v => html`
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
+      <div class="h-1 ${v.bar}"></div>
+      <div class="p-6">
+        <div class="flex items-center justify-between mb-1">
+          <p class="text-sm font-bold text-slate-900 dark:text-slate-50">${v.label}</p>
+          <code class="text-xs bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400 px-2 py-0.5 rounded">ml-toast-notification type="${v.type}"</code>
+        </div>
+        <p class="text-xs text-slate-400 mb-5">${v.subtitle}</p>
         <button
-          class="${p === position
-            ? 'bg-sky-500 text-white border-sky-500'
-            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:opacity-80'
-          } border rounded-md px-1.5 py-1 text-xs font-medium transition-colors cursor-pointer"
-          @click=${() => { this.config = { ...this.config, position: p }; }}
-        >${p}</button>
-      `)}
+          class="px-4 py-2 rounded-lg text-sm font-semibold bg-slate-100 dark:bg-slate-700 ${v.labelCls} hover:opacity-80 transition-opacity cursor-pointer"
+          @click=${() => this.show(v.type)}
+        >Show ${v.label} toast →</button>
+      </div>
+    </div>
+    `)}
+
+  </div>
+</section>
+
+${TOAST_VARIANTS.map(v => html`
+  <groupnotifyuser--ml-toast-notification
+    type="${v.type}"
+    position="bottom-right"
+    duration="3000"
+    .visible=${this.getVisible(v.type)}
+    .dismissible=${true}
+    @dismiss=${() => this.setVisible(v.type, false)}
+  >
+    <Title>${v.title}</Title>
+    <Message>${v.message}</Message>
+  </groupnotifyuser--ml-toast-notification>
+`)}`;
+  }
+
+  // ===========================================================================
+  // REFERENCE TABLE
+  // ===========================================================================
+
+  private renderReferenceTable(): TemplateResult {
+    const rows: Array<{
+      scenario: string;
+      info: boolean; success: boolean; warning: boolean; error: boolean;
+    }> = [
+      { scenario: 'System update or informational message',       info: true,  success: false, warning: false, error: false },
+      { scenario: 'Action completed successfully',                info: false, success: true,  warning: false, error: false },
+      { scenario: 'File saved, form submitted, data synced',      info: false, success: true,  warning: false, error: false },
+      { scenario: 'User is approaching a quota or limit',         info: false, success: false, warning: true,  error: false },
+      { scenario: 'Recoverable issue, user action needed',        info: false, success: false, warning: true,  error: false },
+      { scenario: 'Network or system error',                      info: false, success: false, warning: false, error: true  },
+      { scenario: 'Payment failed or destructive action blocked', info: false, success: false, warning: false, error: true  },
+    ];
+    const headers = [
+      { label: 'Info',    cls: 'text-sky-600 dark:text-sky-400'         },
+      { label: 'Success', cls: 'text-emerald-600 dark:text-emerald-400' },
+      { label: 'Warning', cls: 'text-amber-600 dark:text-amber-400'     },
+      { label: 'Error',   cls: 'text-red-600 dark:text-red-400'         },
+    ];
+    return html`
+<section class="bg-slate-100 dark:bg-slate-950 px-8 py-20 border-t border-slate-200 dark:border-slate-700">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-slate-50 mb-2">Quick reference</h2>
+    <p class="text-sm text-slate-500 dark:text-slate-400 mb-8">Match your feedback scenario to the right toast type.</p>
+    <div class="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700">
+            <th class="text-left px-5 py-3.5 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide w-1/2">
+              Scenario
+            </th>
+            ${headers.map(h => html`
+              <th class="px-4 py-3.5 text-xs font-semibold uppercase tracking-wide ${h.cls}">${h.label}</th>
+            `)}
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map((row, i) => html`
+            <tr class="${i % 2 !== 0 ? 'bg-slate-50/60 dark:bg-slate-900/40' : ''} border-b border-slate-100 dark:border-slate-700/60 last:border-0">
+              <td class="px-5 py-3.5 text-slate-700 dark:text-slate-300">${row.scenario}</td>
+              ${([row.info, row.success, row.warning, row.error] as boolean[]).map(ok => html`
+                <td class="px-4 py-3.5 text-center">
+                  ${ok
+                    ? html`<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400 text-xs font-bold">✓</span>`
+                    : html`<span class="text-slate-200 dark:text-slate-700 text-sm">—</span>`}
+                </td>
+              `)}
+            </tr>
+          `)}
+        </tbody>
+      </table>
     </div>
   </div>
-
-  <div>
-    <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">dismissible</p>
-    <button
-      class="${dismissible
-        ? 'bg-sky-500 text-white border-sky-500'
-        : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:opacity-80'
-      } border rounded-lg px-3 py-1.5 text-sm font-medium transition-colors cursor-pointer w-full text-left"
-      @click=${() => { this.config = { ...this.config, dismissible: !dismissible }; }}
-    >dismissible</button>
-  </div>
-
-  <div>
-    <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2">duration</p>
-    <div class="flex flex-col gap-1.5">
-      ${([0, 2000, 5000] as const).map((d) => html`
-        <button
-          class="${d === duration
-            ? 'bg-sky-500 text-white border-sky-500'
-            : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-600 hover:opacity-80'
-          } border rounded-lg px-3 py-1.5 text-sm font-medium transition-colors cursor-pointer w-full text-left"
-          @click=${() => { this.config = { ...this.config, duration: d }; }}
-        >${d === 0 ? 'No auto-dismiss' : `${d / 1000}s`}</button>
-      `)}
-    </div>
-  </div>
-
-</div>`;
+</section>`;
   }
 
   // ===========================================================================
@@ -155,79 +219,10 @@ export class GroupNotifyUserIndex extends StateLitElement {
 
   render() {
     return html`
-<div class="bg-white dark:bg-slate-900 min-h-screen font-sans">
-
-  <!-- Group header -->
-  <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 px-8 py-10">
-    <div class="max-w-3xl">
-      <span class="inline-block px-2.5 py-1 bg-sky-100 dark:bg-sky-900 text-sky-700 dark:text-sky-300 rounded-md text-xs font-semibold uppercase tracking-wide mb-3">
-        groupNotifyUser
-      </span>
-      <h1 class="text-3xl font-bold text-slate-900 dark:text-slate-50 mb-3">Notify User</h1>
-      <p class="text-base text-slate-600 dark:text-slate-400 leading-relaxed">
-        Informs the user about events, status changes, or action results. Controlled via the visible property.
-        Supports notification types (info, success, warning, error), auto-dismiss with configurable duration,
-        position hints, dismissible toggle, and optional action slot.
-      </p>
-    </div>
-  </header>
-
-  <!-- ml-toast-notification -->
-  <section class="bg-white dark:bg-slate-900 px-8 py-12 border-t border-slate-200 dark:border-slate-700">
-    <div class="mb-8">
-      <div class="flex items-center gap-3 mb-2">
-        <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100">Toast Notification</h2>
-        <code class="text-xs bg-slate-200/70 dark:bg-slate-700 text-slate-500 dark:text-slate-400 px-2 py-1 rounded">groupnotifyuser--ml-toast-notification</code>
-      </div>
-      <p class="text-sm text-slate-500 dark:text-slate-400 max-w-2xl leading-relaxed">
-        Ephemeral floating notifications that appear in a screen corner, slide in and out smoothly,
-        indicate different severity levels through color and icon, and dismiss automatically or manually.
-      </p>
-    </div>
-
-    <div class="grid grid-cols-[220px_1fr] gap-6 items-start">
-
-      <!-- Config -->
-      <div class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-5">
-        ${this.renderConfig()}
-      </div>
-
-      <!-- Trigger buttons -->
-      <div class="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
-        <p class="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">Trigger a notification</p>
-        <div class="grid grid-cols-2 gap-3">
-          ${TOAST_TYPES.map(({ type, label, bg, text, }) => html`
-            <button
-              class="${bg} ${text} border rounded-xl px-5 py-4 text-sm font-semibold transition-colors cursor-pointer text-left"
-              @click=${() => this.show(type)}
-            >
-              ${label}
-            </button>
-          `)}
-        </div>
-        <p class="mt-4 text-xs text-slate-400 dark:text-slate-500">
-          Configure position, dismissible and duration on the left, then click a type to trigger it.
-        </p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- Toast instances (one per type, rendered outside the layout flow) -->
-  ${TOAST_TYPES.map(({ type, title, message }) => html`
-    <groupnotifyuser--ml-toast-notification
-      type="${type}"
-      position="${this.config.position}"
-      duration="${this.config.duration}"
-      .visible=${this.getVisible(type)}
-      .dismissible=${this.config.dismissible}
-      @dismiss=${() => this.setVisible(type, false)}
-    >
-      <Title>${title}</Title>
-      <Message>${message}</Message>
-    </groupnotifyuser--ml-toast-notification>
-  `)}
-
+<div class="font-sans min-h-screen">
+  ${this.renderHero()}
+  ${this.renderShowcaseCards()}
+  ${this.renderReferenceTable()}
 </div>`;
   }
 }
