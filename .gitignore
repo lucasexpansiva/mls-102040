@@ -1,0 +1,14 @@
+# Dependencies
+node_modules/
+
+# Build artifacts
+preBuild/
+obj/compiled.zip
+obj/source.zip
+
+# Generated files
+#package.json
+package-lock.json
+
+# Claude Code
+CLAUDE.md
